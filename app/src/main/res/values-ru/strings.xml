@@ -35,7 +35,7 @@
 
     <!-- Preferences Sections -->
     <string name="pref_category_general_blocking">Общие</string>
-    <string name="pref_category_unknown_phone_api">API Unknownphone 🌐</string>
+    <string name="pref_category_unknown_phone_api">UnknownPhone scraper</string>
     <string name="pref_category_tellows_api">API Tellows 🌐</string>
     <string name="pref_category_truecaller_api">API Truecaller 🌐</string>
     <string name="pref_category_spam_filters">Фильтры спам-номеров</string>
@@ -75,18 +75,6 @@
     <!-- General Blocking Settings -->
     <string name="pref_enable_blocking_title">Включить блокировку</string>
     <string name="pref_enable_blocking_summary">Включить или выключить функцию блокировки звонков</string>
-
-    <!-- API Unknownphone -->
-    <string name="pref_filter_lista_spam_title">API Unknownphone</string>
-    <string name="pref_filter_lista_spam_summary">(Рекомендуется) Блокирует звонки от спам-номеров, перечисленных в API unknownphone.com</string>
-
-    <string name="pref_filter_lista_spam_api_language_title">Язык API unknownphone.com</string>
-    <string name="pref_filter_lista_spam_api_language_summary">Выберите язык для поиска в API unknownphone.com (влияет на результаты)</string>
-
-    <string name="pref_renew_api_key_title">Обновить ключ API</string>
-    <string name="pref_renew_api_key_summary">Запросите новый ключ API unknownphone.com. Используйте только если API запросы работают неправильно. Злоупотребление этой функцией может привести к блокировке на Unknownphone.</string>
-    <string name="pref_renew_api_key_success">Ключ API успешно обновлен</string>
-    <string name="pref_renew_api_key_failure">Не удалось обновить ключ API</string>
 
     <!-- API Tellows -->
     <string name="pref_filter_tellows_title">API Tellows</string>

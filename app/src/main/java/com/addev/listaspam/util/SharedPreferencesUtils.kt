@@ -45,15 +45,6 @@ fun shouldBlockHiddenNumbers(context: Context): Boolean =
 fun shouldBlockInternationalNumbers(context: Context): Boolean =
     getBooleanPref(context, "pref_block_international_numbers", false)
 
-fun shouldFilterWithListaSpamApi(context: Context): Boolean =
-    getBooleanPref(context, "pref_filter_lista_spam", true)
-
-fun getListaSpamApiLang(context: Context): String? =
-    getStringPref(context, "pref_language")?.uppercase()
-
-fun setListaSpamApiLang(context: Context, languageCode: String) =
-    setStringPref(context, "pref_language", languageCode.uppercase())
-
 fun shouldFilterWithListaSpamScraper(context: Context): Boolean =
     getBooleanPref(context, "pref_listaspam_scraper", false)
 
@@ -281,21 +272,4 @@ fun isNumberWhitelisted(context: Context, number: String): Boolean {
 
 fun isUpdateCheckEnabled(context: Context): Boolean =
     getBooleanPref(context, "pref_enable_update_check", true)
-
-fun getUnknownPhoneApiKey(context: Context): String? =
-    getStringPref(context, "pref_unknown_phone_api_key")
-
-fun setUnknownPhoneApiKey(context: Context, apiKey: String) =
-    setStringPref(context, "pref_unknown_phone_api_key", apiKey)
-
-fun clearUnknownPhoneApiKey(context: Context) =
-    getPrefs(context).edit { remove("pref_unknown_phone_api_key") }
-
-fun isNumberInDangerousList(context: Context, number: String): Boolean {
-    val normalized = number.replace("\\D".toRegex(), "")
-    val dao = com.addev.listaspam.db.AppDatabase.getInstance(context).dangerousPhoneDao()
-    return dao.exists(normalized) || dao.getAllNumbers().any { entry ->
-        entry.replace("\\D".toRegex(), "") == normalized
-    }
-}
 

@@ -16,25 +16,10 @@
 
     </PreferenceCategory>
 
-    <!-- Spam Number Filters -->
+    <!-- UnknownPhone scraper -->
     <PreferenceCategory
         android:title="@string/pref_category_unknown_phone_api"
         app:iconSpaceReserved="false">
-
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="pref_filter_lista_spam"
-            android:summary="@string/pref_filter_lista_spam_summary"
-            android:title="@string/pref_filter_lista_spam_title"
-            app:iconSpaceReserved="false" />
-
-        <ListPreference
-            android:entries="@array/language_names"
-            android:entryValues="@array/language_values"
-            android:key="pref_language"
-            android:summary="@string/pref_filter_lista_spam_api_language_summary"
-            android:title="@string/pref_filter_lista_spam_api_language_title"
-            app:iconSpaceReserved="false" />
 
         <CheckBoxPreference
             android:defaultValue="false"
@@ -50,18 +35,6 @@
             android:key="pref_listaspam_scraper_country"
             android:summary="@string/pref_listaspam_scraper_country_summary"
             android:title="@string/pref_listaspam_scraper_country_title"
-            app:iconSpaceReserved="false" />
-
-        <Preference
-            android:key="pref_renew_api_key"
-            android:summary="@string/pref_renew_api_key_summary"
-            android:title="@string/pref_renew_api_key_title"
-            app:iconSpaceReserved="false" />
-
-        <Preference
-            android:key="pref_update_dangerous_list"
-            android:summary="@string/pref_update_dangerous_list_summary"
-            android:title="@string/pref_update_dangerous_list_title"
             app:iconSpaceReserved="false" />
 
     </PreferenceCategory>

@@ -35,7 +35,7 @@
 
     <!-- Preferences Sections -->
     <string name="pref_category_general_blocking">Geral</string>
-    <string name="pref_category_unknown_phone_api">API Unknownphone 🌐</string>
+    <string name="pref_category_unknown_phone_api">Scraper UnknownPhone</string>
     <string name="pref_category_tellows_api">API Tellows 🌐</string>
     <string name="pref_category_truecaller_api">API Truecaller 🌐</string>
     <string name="pref_category_spam_filters">Filtros de Números Spam</string>
@@ -75,17 +75,6 @@
     <string name="pref_whitelisted_numbers_list_summary">Introduza números de telefone a permitir (um por linha)</string>
     <string name="pref_whitelisted_numbers_list_error">Número inválido. Use apenas dígitos e +.</string>
     <string name="pref_whitelisted_numbers_list_example">Ex: +33612345678, 612345678. Um por linha.</string>
-
-    <!-- API Unknownphone -->
-    <string name="pref_filter_lista_spam_title">API Unknownphone</string>
-    <string name="pref_filter_lista_spam_summary">(Recomendado) Bloqueia chamadas de números spam listados na API unknownphone.com</string>
-    <string name="pref_filter_lista_spam_api_language_title">Idioma da API unknownphone.com</string>
-    <string name="pref_filter_lista_spam_api_language_summary">Selecione o idioma para pesquisas na API unknownphone.com (afeta os resultados)</string>
-
-    <string name="pref_renew_api_key_title">Renovar Chave de API</string>
-    <string name="pref_renew_api_key_summary">Solicite uma nova chave de API do unknownphone.com. Use apenas se as solicitações de API estiverem falhando. Abusar desta opção pode resultar em banimento do Unknownphone.</string>
-    <string name="pref_renew_api_key_success">Chave de API renovada com sucesso</string>
-    <string name="pref_renew_api_key_failure">Falha ao renovar a chave de API</string>
 
     <!-- API Tellows -->
     <string name="pref_filter_tellows_title">API Tellows</string>

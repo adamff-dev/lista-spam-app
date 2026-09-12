@@ -1,8 +1,6 @@
 package com.addev.listaspam
 
 import android.content.Context
-import android.app.Activity
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
@@ -14,7 +12,6 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.addev.listaspam.preferences.BaseListManagerDialogFragment
 import com.addev.listaspam.preferences.BaseListManagerPreference
-import com.addev.listaspam.util.ApiUtils
 import com.addev.listaspam.util.BLOCK_NUMBERS_KEY
 import com.addev.listaspam.util.SPAM_PREFS
 import com.addev.listaspam.util.WHITELIST_NUMBERS_KEY
@@ -24,6 +21,14 @@ import org.json.JSONObject
 import java.io.File
 
 class SettingsActivity : AppCompatActivity() {
+    private val retiredUnknownPhoneApiPreferenceKeys = setOf(
+        "pref_filter_lista_spam",
+        "pref_language",
+        "pref_named_call_log",
+        "pref_system_info_spam_total",
+        "pref_unknown_phone_api_key"
+    )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
@@ -60,92 +65,9 @@ class SettingsActivity : AppCompatActivity() {
      * It loads preferences from an XML resource file.
      */
     class SettingsFragment : PreferenceFragmentCompat() {
-        private val cloudflareChallengeLauncher =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                val preference = findPreference<Preference>("pref_renew_api_key")
-                val data = result.data
-                val userId = data?.getStringExtra(CloudflareChallengeActivity.EXTRA_USER_ID)
-                val cookie = data?.getStringExtra(CloudflareChallengeActivity.EXTRA_COOKIE)
-                val userAgent = data?.getStringExtra(CloudflareChallengeActivity.EXTRA_USER_AGENT)
-
-                if (
-                    result.resultCode != Activity.RESULT_OK ||
-                    userId.isNullOrBlank() ||
-                    cookie.isNullOrBlank() ||
-                    userAgent.isNullOrBlank()
-                ) {
-                    preference?.isEnabled = true
-                    return@registerForActivityResult
-                }
-
-                val appContext = requireContext().applicationContext
-                Thread {
-                    val renewalResult = ApiUtils.renewApiKey(appContext, userId, cookie, userAgent)
-                    activity?.runOnUiThread {
-                        if (!isAdded) return@runOnUiThread
-                        val message = if (renewalResult == ApiUtils.ApiKeyRenewalResult.SUCCESS) {
-                            R.string.pref_renew_api_key_success
-                        } else {
-                            R.string.pref_renew_api_key_failure
-                        }
-                        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-                        preference?.isEnabled = true
-                    }
-                }.start()
-            }
-
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.preferences, rootKey)
 
-            findPreference<Preference>("pref_renew_api_key")?.setOnPreferenceClickListener {
-                val preference = it
-                val userId = ApiUtils.newApiKeyUserId()
-                val appContext = requireContext().applicationContext
-                preference.isEnabled = false
-                Thread {
-                    val renewalResult = ApiUtils.renewApiKey(appContext, userId)
-                    when (renewalResult) {
-                        ApiUtils.ApiKeyRenewalResult.CLOUDFLARE_CHALLENGE -> activity?.runOnUiThread {
-                            if (!isAdded) return@runOnUiThread
-                            cloudflareChallengeLauncher.launch(
-                                Intent(requireContext(), CloudflareChallengeActivity::class.java)
-                                    .putExtra(CloudflareChallengeActivity.EXTRA_USER_ID, userId)
-                            )
-                        }
-                        ApiUtils.ApiKeyRenewalResult.SUCCESS,
-                        ApiUtils.ApiKeyRenewalResult.FAILURE -> activity?.runOnUiThread {
-                            if (!isAdded) return@runOnUiThread
-                            val message = if (renewalResult == ApiUtils.ApiKeyRenewalResult.SUCCESS) {
-                                R.string.pref_renew_api_key_success
-                            } else {
-                                R.string.pref_renew_api_key_failure
-                            }
-                            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-                            preference.isEnabled = true
-                        }
-                    }
-                }.start()
-                true
-            }
-
-            findPreference<Preference>("pref_update_dangerous_list")?.setOnPreferenceClickListener {
-                val pref = it
-                pref.isEnabled = false
-                Thread {
-                    ApiUtils.refreshDangerousPhonesList(requireContext())
-                    requireActivity().runOnUiThread {
-                        Toast.makeText(requireContext(), R.string.pref_update_dangerous_list_success, Toast.LENGTH_SHORT).show()
-                        pref.isEnabled = true
-                    }
-                }.start()
-                true
-            }
-
-            findPreference<androidx.preference.ListPreference>("pref_language")
-                ?.setOnPreferenceChangeListener { _, _ ->
-                    Thread { ApiUtils.refreshDangerousPhonesList(requireContext()) }.start()
-                    true
-                }
         }
 
         override fun onDisplayPreferenceDialog(preference: Preference) {
@@ -324,20 +246,30 @@ class SettingsActivity : AppCompatActivity() {
                     sharedPreferences.edit {
                         val prefJsonObject = jsonObject.getJSONObject(prefName)
                         for (key in prefJsonObject.keys()) {
+                            if (key in retiredUnknownPhoneApiPreferenceKeys) continue
+                            val targetKey = if (key == "pref_filter_lista_spam_scraper") {
+                                "pref_listaspam_scraper"
+                            } else {
+                                key
+                            }
                             when (val value = prefJsonObject.get(key)) {
                                 is JSONArray -> {
                                     if (prefName == SPAM_PREFS) {
-                                        val set = (0 until value.length()).map { value.getString(it) }.toSet()
-                                        putStringSet(key, set)
+                                        val set = (0 until value.length())
+                                            .mapNotNull { index ->
+                                                value.optString(index).takeIf { it.isNotBlank() && it != "null" }
+                                            }
+                                            .toSet()
+                                        putStringSet(targetKey, set)
                                     } else {
-                                        putString(key, value.toString())
+                                        putString(targetKey, value.toString())
                                     }
                                 }
-                                is Int -> putInt(key, value)
-                                is Long -> putLong(key, value)
-                                is Float -> putFloat(key, value)
-                                is Boolean -> putBoolean(key, value)
-                                is String -> putString(key, value)
+                                is Int -> putInt(targetKey, value)
+                                is Long -> putLong(targetKey, value)
+                                is Float -> putFloat(targetKey, value)
+                                is Boolean -> putBoolean(targetKey, value)
+                                is String -> putString(targetKey, value)
                                 JSONObject.NULL -> { /* omitir claves con valor null */ }
                             }
                         }
@@ -385,9 +317,8 @@ class SettingsActivity : AppCompatActivity() {
                     val value = prefJsonObject.get(key)
                     when (value) {
                         is JSONArray -> {
-                            // Verificar que el JSONArray contiene solo Strings
                             for (i in 0 until value.length()) {
-                                if (value.get(i) !is String) {
+                                if (value.get(i) !is String && value.get(i) != JSONObject.NULL) {
                                     return false
                                 }
                             }

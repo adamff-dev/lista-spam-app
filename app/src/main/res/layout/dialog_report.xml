@@ -65,13 +65,6 @@
             android:layout_marginBottom="8dp" />
 
         <CheckBox
-            android:id="@+id/checkboxUnknownPhone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="UnknownPhone" />
-
-        <CheckBox
             android:id="@+id/checkboxTellows"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -43,7 +43,6 @@ class ReportDialogManager(private val context: Context) {
         val messageEditText = dialogView.findViewById<EditText>(R.id.messageEditText)
         val spamRadio = dialogView.findViewById<RadioButton>(R.id.radioSpam)
         val noSpamRadio = dialogView.findViewById<RadioButton>(R.id.radioNoSpam)
-        val checkboxUnknownPhone = dialogView.findViewById<CheckBox>(R.id.checkboxUnknownPhone)
         val checkboxTellows = dialogView.findViewById<CheckBox>(R.id.checkboxTellows)
         val checkboxTruecaller = dialogView.findViewById<CheckBox>(R.id.checkboxTruecaller)
 
@@ -51,8 +50,6 @@ class ReportDialogManager(private val context: Context) {
         spamRadio.text = context.getString(R.string.report_spam)
         noSpamRadio.text = context.getString(R.string.report_not_spam)
 
-        checkboxUnknownPhone.text =
-            buildProviderText(context, "UnknownPhone", getLanguageDisplayName())
         checkboxTellows.text = buildProviderText(context, "Tellows", getCountryDisplayName())
         val prefix = extractPrefixFromNumber(number)
         checkboxTruecaller.text = context.getString(
@@ -92,7 +89,6 @@ class ReportDialogManager(private val context: Context) {
         val messageEditText = dialogView.findViewById<EditText>(R.id.messageEditText)
         val spamRadio = dialogView.findViewById<RadioButton>(R.id.radioSpam)
         val noSpamRadio = dialogView.findViewById<RadioButton>(R.id.radioNoSpam)
-        val checkboxUnknownPhone = dialogView.findViewById<CheckBox>(R.id.checkboxUnknownPhone)
         val checkboxTellows = dialogView.findViewById<CheckBox>(R.id.checkboxTellows)
         val checkboxTruecaller = dialogView.findViewById<CheckBox>(R.id.checkboxTruecaller)
 
@@ -114,7 +110,7 @@ class ReportDialogManager(private val context: Context) {
             return false
         }
 
-        if (!checkboxUnknownPhone.isChecked && !checkboxTellows.isChecked && !checkboxTruecaller.isChecked) {
+        if (!checkboxTellows.isChecked && !checkboxTruecaller.isChecked) {
             Toast.makeText(
                 context,
                 context.getString(R.string.select_at_least_one_provider),
@@ -135,7 +131,6 @@ class ReportDialogManager(private val context: Context) {
     ) {
         val messageEditText = dialogView.findViewById<EditText>(R.id.messageEditText)
         val spamRadio = dialogView.findViewById<RadioButton>(R.id.radioSpam)
-        val checkboxUnknownPhone = dialogView.findViewById<CheckBox>(R.id.checkboxUnknownPhone)
         val checkboxTellows = dialogView.findViewById<CheckBox>(R.id.checkboxTellows)
         val checkboxTruecaller = dialogView.findViewById<CheckBox>(R.id.checkboxTruecaller)
 
@@ -144,14 +139,6 @@ class ReportDialogManager(private val context: Context) {
 
         CoroutineScope(Dispatchers.IO).launch {
             val reportedTo = mutableListOf<String>()
-
-            if (checkboxUnknownPhone.isChecked) {
-                getListaSpamApiLang(context)?.let { lang ->
-                    if (ApiUtils.reportToUnknownPhone(context, number, message, isSpam, lang)) {
-                        reportedTo.add("UnknownPhone")
-                    }
-                }
-            }
 
             if (checkboxTellows.isChecked) {
                 getTellowsApiCountry(context)?.let { country ->
@@ -200,14 +187,6 @@ class ReportDialogManager(private val context: Context) {
         } else {
             context.getString(R.string.report_failure)
         }
-    }
-
-    private fun getLanguageDisplayName(): String {
-        val lang = getListaSpamApiLang(context)
-        val langValues = context.resources.getStringArray(R.array.language_values)
-        val langNames = context.resources.getStringArray(R.array.language_names)
-        return getDisplayName(lang, langValues, langNames)
-            ?: context.getString(R.string.unknown_value)
     }
 
     private fun getCountryDisplayName(): String {

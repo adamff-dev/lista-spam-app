@@ -35,7 +35,7 @@
 
     <!-- Preferences Sections -->
     <string name="pref_category_general_blocking">General</string>
-    <string name="pref_category_unknown_phone_api">Unknownphone API 🌐</string>
+    <string name="pref_category_unknown_phone_api">UnknownPhone scraper</string>
     <string name="pref_category_tellows_api">Tellows API 🌐</string>
     <string name="pref_category_truecaller_api">Truecaller API 🌐</string>
     <string name="pref_category_spam_filters">Spam Number Filters</string>
@@ -89,28 +89,10 @@
     <string name="pref_enable_blocking_title">Enable Blocking</string>
     <string name="pref_enable_blocking_summary">Enable or disable call blocking functionality</string>
 
-    <!-- API Unknownphone -->
-    <string name="pref_filter_lista_spam_title">API Unknownphone</string>
-    <string name="pref_filter_lista_spam_summary">(Recommended) Blocks calls from spam numbers listed in unknownphone.com API</string>
-
-    <string name="pref_filter_lista_spam_api_language_title">unknownphone.com API Language</string>
-    <string name="pref_filter_lista_spam_api_language_summary">Select the language for searches in the unknownphone.com API (affects results)</string>
-
-    <string name="pref_listaspam_scraper_title">Web directory scraper</string>
-    <string name="pref_listaspam_scraper_summary">Check the selected country directory for reported spam calls</string>
-    <string name="pref_listaspam_scraper_country_title">Web directory country</string>
+    <string name="pref_listaspam_scraper_title">Enable UnknownPhone scraper</string>
+    <string name="pref_listaspam_scraper_summary">Check the selected regional directory for reported spam calls</string>
+    <string name="pref_listaspam_scraper_country_title">UnknownPhone lookup country</string>
     <string name="pref_listaspam_scraper_country_summary">Uses the selected regional directory; other countries use the international UnknownPhone search</string>
-
-    <string name="pref_renew_api_key_title">Renew API Key</string>
-    <string name="pref_renew_api_key_summary">Request a new unknownphone.com API key. Only use if API requests are failing. Abusing this option may result in a ban from Unknownphone.</string>
-    <string name="pref_renew_api_key_success">API key renewed successfully</string>
-    <string name="pref_renew_api_key_failure">Failed to renew API key</string>
-    <string name="cloudflare_challenge_title">Security verification</string>
-
-    <string name="pref_update_dangerous_list_title">Update Dangerous Numbers List</string>
-    <string name="pref_update_dangerous_list_summary">Manually refresh the local dangerous numbers database from unknownphone.com. Updated automatically every day at 2 AM.</string>
-    <string name="pref_update_dangerous_list_success">Dangerous numbers list updated</string>
-    <string name="pref_update_dangerous_list_failure">Failed to update dangerous numbers list</string>
 
     <!-- API Tellows -->
     <string name="pref_filter_tellows_title">Tellows API</string>

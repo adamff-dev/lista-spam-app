@@ -28,20 +28,15 @@ import com.addev.listaspam.service.UpdateChecker
 import com.addev.listaspam.util.SpamUtils
 import com.addev.listaspam.util.getBlockedNumbers
 import com.addev.listaspam.util.getCallLogs
-import com.addev.listaspam.util.getListaSpamApiLang
 import com.addev.listaspam.util.getTellowsApiCountry
 import com.addev.listaspam.util.getWhitelistNumbers
-import com.addev.listaspam.util.setListaSpamApiLang
 import com.addev.listaspam.util.setTellowsApiCountry
 import com.addev.listaspam.util.getTruecallerApiCountry
 import com.addev.listaspam.util.setTruecallerApiCountry
-import com.addev.listaspam.util.getUnknownPhoneApiKey
 import com.addev.listaspam.util.isUpdateCheckEnabled
 import java.util.Locale
 import androidx.core.net.toUri
-import com.addev.listaspam.util.ApiUtils
 import com.addev.listaspam.util.CountryLanguageUtils
-import com.addev.listaspam.worker.DangerousPhonesWorker
 
 class MainActivity : AppCompatActivity(), CallLogAdapter.OnItemChangedListener {
 
@@ -68,14 +63,11 @@ class MainActivity : AppCompatActivity(), CallLogAdapter.OnItemChangedListener {
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView?.layoutManager = LinearLayoutManager(this)
 
-        CountryLanguageUtils.setListaSpamLanguage(this)
         CountryLanguageUtils.setTellowsCountry(this)
         CountryLanguageUtils.setTruecallerCountry(this)
         if (isUpdateCheckEnabled(this)) {
             checkUpdates()
         }
-        Thread { ApiUtils.fetchAndStoreApiKey(this) }.start()
-        DangerousPhonesWorker.schedule(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

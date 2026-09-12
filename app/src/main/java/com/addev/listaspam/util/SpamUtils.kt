@@ -180,18 +180,6 @@ class SpamUtils {
                 return@launch
             }
 
-            // Check dangerous phones list (from _get_dangerous_phones_list)
-            if (isNumberInDangerousList(context, number)) {
-                handleSpamNumber(
-                    context,
-                    number,
-                    false,
-                    context.getString(R.string.block_already_blocked_number),
-                    callback
-                )
-                return@launch
-            }
-
             // Don't check number if is in contacts
             val isNumberInAgenda = isNumberInAgenda(context, number)
             if (isNumberInAgenda) {
@@ -338,12 +326,6 @@ class SpamUtils {
     private fun buildSpamCheckers(context: Context): List<suspend (String) -> Boolean> {
         val spamCheckers = mutableListOf<suspend (String) -> Boolean>()
 
-        val listaSpamApi = shouldFilterWithListaSpamApi(context)
-        if (listaSpamApi) {
-            spamCheckers.add { number ->
-                ApiUtils.checkListaSpamApi(context, number, getListaSpamApiLang(context) ?: "EN")
-            }
-        }
         if (shouldFilterWithListaSpamScraper(context)) {
             spamCheckers.add { number ->
                 ApiUtils.checkListaSpamScraper(number, getListaSpamScraperCountry(context))

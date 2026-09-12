@@ -33,7 +33,7 @@
     <string name="donate">寄付</string>
     <!-- Preferences Sections -->
     <string name="pref_category_general_blocking">一般</string>
-    <string name="pref_category_unknown_phone_api">Unknownphone API 🌐</string>
+    <string name="pref_category_unknown_phone_api">UnknownPhone scraper</string>
     <string name="pref_category_tellows_api">Tellows API 🌐</string>
     <string name="pref_category_truecaller_api">Truecaller API 🌐</string>
     <string name="pref_category_spam_filters">スパム電話番号のフィルタ</string>
@@ -71,15 +71,6 @@
     <string name="pref_whitelisted_numbers_list_summary">許可する電話番号を入力 (一行ごと)</string>
     <string name="pref_whitelisted_numbers_list_error">無効な番号です。数字と「+」のみを使用してください。</string>
     <string name="pref_whitelisted_numbers_list_example">例: +33612345678, 612345678。一行ごと。</string>
-    <!-- API Unknownphone -->
-    <string name="pref_filter_lista_spam_title">Unknownphone API</string>
-    <string name="pref_filter_lista_spam_summary">(推奨) unknownphone.com API にリストされているスパムからの着信をブロックします</string>
-    <string name="pref_filter_lista_spam_api_language_title">unknownphone.com API の言語</string>
-    <string name="pref_filter_lista_spam_api_language_summary">unknownphone.com API で検索する言語を選択してください (結果に影響)</string>
-    <string name="pref_renew_api_key_title">API キーを更新</string>
-    <string name="pref_renew_api_key_summary">unknownphone.com の新しい API キーをリクエストしてください。API リクエストが失敗している場合のみを使用してください。このオプションを乱用するとUnknownphone からのバンの対象になる場合があります。</string>
-    <string name="pref_renew_api_key_success">API キーが正常に更新されました</string>
-    <string name="pref_renew_api_key_failure">API キーの更新に失敗しました</string>
     <!-- API Tellows -->
     <string name="pref_filter_tellows_title">Tellows API</string>
     <string name="pref_filter_tellows_summary">(推奨) Tellows API にリストされているスパムからの着信をブロックします</string>
