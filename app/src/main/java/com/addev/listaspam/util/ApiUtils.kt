@@ -351,6 +351,15 @@ object ApiUtils {
         }
     }
 
+    fun isCloudflareChallengeResponse(response: okhttp3.Response): Boolean {
+        val server = response.header("Server").orEmpty()
+        val cfRay = response.header("CF-RAY")
+        return response.code == 403 && (
+            cfRay != null ||
+            server.contains("cloudflare", ignoreCase = true)
+        )
+    }
+
     /**
      * Sends a POST request to the UnknownPhone API to retrieve information about the given phone number.
      *

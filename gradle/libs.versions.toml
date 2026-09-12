@@ -17,6 +17,7 @@ okhttp = "4.9.3"
 preferenceKtx = "1.2.1"
 room = "2.6.1"
 workmanager = "2.9.1"
+cloudflareBypass = "0.0.5"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -37,6 +38,7 @@ androidx-room-runtime = { group = "androidx.room", name = "room-runtime", versio
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workmanager" }
+cloudflare-bypass = { group = "com.github.darkryh", name = "Cloudflare-Bypass", version.ref = "cloudflareBypass" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -5,9 +5,9 @@ import android.app.Activity
 import android.os.Bundle
 import android.webkit.CookieManager
 import android.webkit.WebView
-import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import com.addev.listaspam.util.ApiUtils
+import com.ead.lib.cloudflare_bypass.BypassClient
 
 class CloudflareChallengeActivity : AppCompatActivity() {
     private lateinit var webView: WebView
@@ -29,64 +29,51 @@ class CloudflareChallengeActivity : AppCompatActivity() {
             settings.javaScriptEnabled = true
             settings.domStorageEnabled = true
             settings.userAgentString = CHROME_USER_AGENT
+            settings.loadWithOverviewMode = true
+            settings.useWideViewPort = true
             CookieManager.getInstance().setAcceptThirdPartyCookies(this, true)
-            webViewClient = object : WebViewClient() {
-                override fun onPageFinished(view: WebView, url: String) {
-                    onWebPageLoaded(url)
+
+            webViewClient = object : BypassClient() {
+                override fun onPageStartedPassed(view: WebView?, url: String?, favicon: android.graphics.Bitmap?) {
+                    super.onPageStartedPassed(view, url, favicon)
+                }
+
+                override fun onPageFinishedByPassed(view: WebView?, url: String?) {
+                    super.onPageFinishedByPassed(view, url)
+                    checkAndCompleteChallenge()
                 }
 
                 override fun onReceivedError(
-                    view: WebView?,
+                    view: android.webkit.WebView?,
                     errorCode: Int,
                     description: String?,
                     failingUrl: String?
                 ) {
-                    completeChallengeIfVerified(userId.orEmpty())
+                    checkAndCompleteChallenge()
                 }
             }
         }
         setContentView(webView)
 
-        val formData = "os_version=${android.os.Build.VERSION.SDK_INT}" +
-            "&user_id=$userId&_action=_get_new_api_key&device=Android"
-        webView.postUrl(ApiUtils.UNKNOWN_PHONE_API_URL, formData.toByteArray(Charsets.UTF_8))
+        webView.loadUrl(ApiUtils.UNKNOWN_PHONE_API_URL)
     }
 
-    private fun onWebPageLoaded(url: String) {
+    private fun checkAndCompleteChallenge() {
         val currentUserId = userId.orEmpty()
         if (challengeCompleted) return
 
-        val cookie = CookieManager.getInstance().getCookie(ApiUtils.UNKNOWN_PHONE_API_URL).orEmpty()
+        val cookie = CookieManager.getInstance()
+            .getCookie(ApiUtils.UNKNOWN_PHONE_API_URL).orEmpty()
         if (cookie.contains("cf_clearance=")) {
-            val formData = "os_version=${android.os.Build.VERSION.SDK_INT}" +
-                "&user_id=$currentUserId&_action=_get_new_api_key&device=Android"
-            webView.postUrl(ApiUtils.UNKNOWN_PHONE_API_URL, formData.toByteArray(Charsets.UTF_8))
-            return
-        }
-
-        val currentCookie = CookieManager.getInstance().getCookie(url).orEmpty()
-        if (currentCookie.contains("cf_clearance=")) {
             completeChallengeIfVerified(currentUserId)
-            return
-        }
-
-        if (url.contains("challenge") || url.contains("captcha")) {
-            webView.evaluateJavascript(
-                """
-                (function() {
-                    var btn = document.querySelector('input[type="submit"], button[type="submit"], .challenge-submit, #challenge-submit');
-                    if (btn) btn.click();
-                    return 'clicked';
-                })();
-                """.trimIndent()
-            ) {}
         }
     }
 
     private fun completeChallengeIfVerified(userId: String) {
         if (challengeCompleted) return
 
-        val cookie = CookieManager.getInstance().getCookie(ApiUtils.UNKNOWN_PHONE_API_URL).orEmpty()
+        val cookie = CookieManager.getInstance()
+            .getCookie(ApiUtils.UNKNOWN_PHONE_API_URL).orEmpty()
         if (!cookie.contains("cf_clearance=")) return
 
         challengeCompleted = true
