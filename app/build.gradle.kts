@@ -1,6 +1,12 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.devtools.ksp)
+}
+
+val localProperties = Properties().apply {
+    rootProject.file("local.properties").inputStream().use { input -> load(input) }
 }
 
 android {
@@ -12,14 +18,24 @@ android {
         minSdk = 29
         //noinspection OldTargetApi
         targetSdk = 35
-        versionCode = 32
-        versionName = "2.5.8"
+        versionCode = 33
+        versionName = "2.5.9"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = file(localProperties.getProperty("releaseStoreFile"))
+            storePassword = localProperties.getProperty("releaseStorePassword")
+            keyAlias = localProperties.getProperty("releaseKeyAlias")
+            keyPassword = localProperties.getProperty("releaseKeyPassword")
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
