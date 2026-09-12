@@ -3,11 +3,14 @@ package com.addev.listaspam.util
 import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.addev.listaspam.MainActivity
 import com.addev.listaspam.R
 
 private const val NOTIFICATION_CHANNEL_ID = "NOTIFICATION_CHANNEL"
@@ -35,9 +38,20 @@ fun sendNotification(context: Context, title: String, message: String, durationM
         return
     }
 
+    val contentIntent = PendingIntent.getActivity(
+        context,
+        NOTIFICATION_ID,
+        Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        },
+        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+    )
+
     val builder = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
         .setSmallIcon(R.mipmap.ic_launcher).setContentTitle(title).setContentText(message)
         .setPriority(NotificationCompat.PRIORITY_HIGH)
+        .setContentIntent(contentIntent)
+        .setAutoCancel(true)
 
     if (durationMs != 0L) {
         builder.setTimeoutAfter(durationMs)
