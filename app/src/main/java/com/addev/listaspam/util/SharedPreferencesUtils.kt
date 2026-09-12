@@ -86,6 +86,9 @@ fun shouldFilterWithStirShaken(context: Context): Boolean =
 fun shouldMuteInsteadOfBlocking(context: Context): Boolean =
     getBooleanPref(context, "pref_mute_instead_of_block", false)
 
+fun shouldAnswerAndHangup(context: Context): Boolean =
+    getBooleanPref(context, "pref_answer_and_hangup", false)
+
 fun isPatternBlockingEnabled(context: Context): Boolean =
     getBooleanPref(context, "pref_enable_pattern_blocking", false)
 

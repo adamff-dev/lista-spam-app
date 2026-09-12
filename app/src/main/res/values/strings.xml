@@ -136,6 +136,9 @@
     <string name="pref_mute_instead_of_block_title">Mute Instead of Block</string>
     <string name="pref_mute_instead_of_block_summary">Mute incoming spam calls instead of blocking them completely</string>
 
+    <string name="pref_answer_and_hangup_title">Answer and Hang Up</string>
+    <string name="pref_answer_and_hangup_summary">Automatically answer and immediately disconnect spam calls</string>
+
     <!-- Notifications -->
     <string name="pref_show_notification_title">Show Notification on Block</string>
     <string name="pref_show_notification_summary">Display a notification when a call is blocked</string>
