@@ -30,7 +30,7 @@ class UpdateChecker(
     private fun getCurrentVersion(): String {
         val manager = context.packageManager
         val info = manager.getPackageInfo(context.packageName, 0)
-        return info.versionName
+        return info.versionName ?: "unknown"
     }
 
     fun checkForUpdateSync() {

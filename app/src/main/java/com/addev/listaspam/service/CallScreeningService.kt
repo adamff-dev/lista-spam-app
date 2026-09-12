@@ -2,7 +2,9 @@ package com.addev.listaspam.service
 
 import android.telecom.Call
 import android.telecom.CallScreeningService
+import android.telecom.TelecomManager
 import com.addev.listaspam.util.SpamUtils
+import com.addev.listaspam.util.shouldAnswerAndHangup
 import com.addev.listaspam.util.shouldMuteInsteadOfBlocking
 
 /**
@@ -39,6 +41,36 @@ class CallScreeningService : CallScreeningService() {
      * @param details Details of the call to be ended.
      */
     private fun endCall(details: Call.Details) {
+        val context = this
+        val telecomManager = getSystemService(TELECOM_SERVICE) as TelecomManager
+
+        if (shouldAnswerAndHangup(context)) {
+            // Silence the call first so the user is not interrupted
+            respondToCall(
+                details, CallResponse.Builder()
+                    .setDisallowCall(false)
+                    .setSilenceCall(true)
+                    .setSkipCallLog(false)
+                    .setSkipNotification(true)
+                    .build()
+            )
+            // Immediately answer and hang up
+            try {
+                telecomManager.acceptRingingCall()
+                telecomManager.endCall()
+            } catch (e: SecurityException) {
+                // Fallback to normal block if permissions fail
+                respondToCall(
+                    details, CallResponse.Builder()
+                        .setDisallowCall(true)
+                        .setRejectCall(true)
+                        .setSkipNotification(true)
+                        .build()
+                )
+            }
+            return
+        }
+
         val shouldMute = shouldMuteInsteadOfBlocking(this)
         if (shouldMute) {
             respondToCall(
