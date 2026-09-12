@@ -46,10 +46,16 @@ fun shouldBlockInternationalNumbers(context: Context): Boolean =
     getBooleanPref(context, "pref_block_international_numbers", false)
 
 fun shouldFilterWithListaSpamScraper(context: Context): Boolean =
-    getBooleanPref(context, "pref_listaspam_scraper", false)
+    getBooleanPref(context, "pref_listaspam_scraper", true)
 
 fun getListaSpamScraperCountry(context: Context): String =
     getStringPref(context, "pref_listaspam_scraper_country")?.uppercase() ?: "ES"
+
+fun hasListaSpamScraperCountry(context: Context): Boolean =
+    getStringPref(context, "pref_listaspam_scraper_country") != null
+
+fun setListaSpamScraperCountry(context: Context, countryCode: String) =
+    setStringPref(context, "pref_listaspam_scraper_country", countryCode.uppercase())
 
 fun shouldFilterWithTellowsApi(context: Context): Boolean =
     getBooleanPref(context, "pref_filter_tellows_api", true)
