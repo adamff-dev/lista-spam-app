@@ -46,13 +46,19 @@ fun shouldBlockInternationalNumbers(context: Context): Boolean =
     getBooleanPref(context, "pref_block_international_numbers", false)
 
 fun shouldFilterWithListaSpamApi(context: Context): Boolean =
-    getBooleanPref(context, "pref_filter_lista_spam_api", true)
+    getBooleanPref(context, "pref_filter_lista_spam", true)
 
 fun getListaSpamApiLang(context: Context): String? =
     getStringPref(context, "pref_language")?.uppercase()
 
 fun setListaSpamApiLang(context: Context, languageCode: String) =
     setStringPref(context, "pref_language", languageCode.uppercase())
+
+fun shouldFilterWithListaSpamScraper(context: Context): Boolean =
+    getBooleanPref(context, "pref_listaspam_scraper", false)
+
+fun getListaSpamScraperCountry(context: Context): String =
+    getStringPref(context, "pref_listaspam_scraper_country")?.uppercase() ?: "ES"
 
 fun shouldFilterWithTellowsApi(context: Context): Boolean =
     getBooleanPref(context, "pref_filter_tellows_api", true)
@@ -71,8 +77,6 @@ fun getTruecallerApiCountry(context: Context): String? =
 
 fun setTruecallerApiCountry(context: Context, countryCode: String) =
     setStringPref(context, "pref_truecaller_country", countryCode.uppercase())
-
-// ...scraper-related preferences removed...
 
 fun shouldBlockNonContacts(context: Context): Boolean =
     getBooleanPref(context, "pref_block_non_contacts", false)

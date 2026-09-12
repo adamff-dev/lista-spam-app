@@ -52,6 +52,20 @@
         <item>SK</item>
         <item>RO</item>
     </string-array>
+    <string-array name="listaspam_scraper_country_names">
+        <item>Espana - ListaSpam</item>
+        <item>Australia - UnknownPhone</item>
+        <item>Canada - UnknownPhone</item>
+        <item>Reino Unido - UnknownPhone</item>
+        <item>Estados Unidos - UnknownPhone</item>
+    </string-array>
+    <string-array name="listaspam_scraper_country_values">
+        <item>ES</item>
+        <item>AU</item>
+        <item>CA</item>
+        <item>GB</item>
+        <item>US</item>
+    </string-array>
     <string-array name="entryvalues_region_preference">
         <item>de</item>
         <item>sa</item>

@@ -1,6 +1,8 @@
 package com.addev.listaspam
 
 import android.content.Context
+import android.app.Activity
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
@@ -58,15 +60,69 @@ class SettingsActivity : AppCompatActivity() {
      * It loads preferences from an XML resource file.
      */
     class SettingsFragment : PreferenceFragmentCompat() {
+        private val cloudflareChallengeLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                val preference = findPreference<Preference>("pref_renew_api_key")
+                val data = result.data
+                val userId = data?.getStringExtra(CloudflareChallengeActivity.EXTRA_USER_ID)
+                val cookie = data?.getStringExtra(CloudflareChallengeActivity.EXTRA_COOKIE)
+                val userAgent = data?.getStringExtra(CloudflareChallengeActivity.EXTRA_USER_AGENT)
+
+                if (
+                    result.resultCode != Activity.RESULT_OK ||
+                    userId.isNullOrBlank() ||
+                    cookie.isNullOrBlank() ||
+                    userAgent.isNullOrBlank()
+                ) {
+                    preference?.isEnabled = true
+                    return@registerForActivityResult
+                }
+
+                val appContext = requireContext().applicationContext
+                Thread {
+                    val renewalResult = ApiUtils.renewApiKey(appContext, userId, cookie, userAgent)
+                    activity?.runOnUiThread {
+                        if (!isAdded) return@runOnUiThread
+                        val message = if (renewalResult == ApiUtils.ApiKeyRenewalResult.SUCCESS) {
+                            R.string.pref_renew_api_key_success
+                        } else {
+                            R.string.pref_renew_api_key_failure
+                        }
+                        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                        preference?.isEnabled = true
+                    }
+                }.start()
+            }
+
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.preferences, rootKey)
 
             findPreference<Preference>("pref_renew_api_key")?.setOnPreferenceClickListener {
+                val preference = it
+                val userId = ApiUtils.newApiKeyUserId()
+                val appContext = requireContext().applicationContext
+                preference.isEnabled = false
                 Thread {
-                    val success = ApiUtils.renewApiKey(requireContext())
-                    requireActivity().runOnUiThread {
-                        val msg = if (success) R.string.pref_renew_api_key_success else R.string.pref_renew_api_key_failure
-                        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+                    val renewalResult = ApiUtils.renewApiKey(appContext, userId)
+                    when (renewalResult) {
+                        ApiUtils.ApiKeyRenewalResult.CLOUDFLARE_CHALLENGE -> activity?.runOnUiThread {
+                            if (!isAdded) return@runOnUiThread
+                            cloudflareChallengeLauncher.launch(
+                                Intent(requireContext(), CloudflareChallengeActivity::class.java)
+                                    .putExtra(CloudflareChallengeActivity.EXTRA_USER_ID, userId)
+                            )
+                        }
+                        ApiUtils.ApiKeyRenewalResult.SUCCESS,
+                        ApiUtils.ApiKeyRenewalResult.FAILURE -> activity?.runOnUiThread {
+                            if (!isAdded) return@runOnUiThread
+                            val message = if (renewalResult == ApiUtils.ApiKeyRenewalResult.SUCCESS) {
+                                R.string.pref_renew_api_key_success
+                            } else {
+                                R.string.pref_renew_api_key_failure
+                            }
+                            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                            preference.isEnabled = true
+                        }
                     }
                 }.start()
                 true

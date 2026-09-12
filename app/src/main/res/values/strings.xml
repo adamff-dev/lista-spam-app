@@ -96,10 +96,16 @@
     <string name="pref_filter_lista_spam_api_language_title">unknownphone.com API Language</string>
     <string name="pref_filter_lista_spam_api_language_summary">Select the language for searches in the unknownphone.com API (affects results)</string>
 
+    <string name="pref_listaspam_scraper_title">Web directory scraper</string>
+    <string name="pref_listaspam_scraper_summary">Check the selected country directory for reported spam calls</string>
+    <string name="pref_listaspam_scraper_country_title">Web directory country</string>
+    <string name="pref_listaspam_scraper_country_summary">Spain uses ListaSpam; other available countries use UnknownPhone</string>
+
     <string name="pref_renew_api_key_title">Renew API Key</string>
     <string name="pref_renew_api_key_summary">Request a new unknownphone.com API key. Only use if API requests are failing. Abusing this option may result in a ban from Unknownphone.</string>
     <string name="pref_renew_api_key_success">API key renewed successfully</string>
     <string name="pref_renew_api_key_failure">Failed to renew API key</string>
+    <string name="cloudflare_challenge_title">Security verification</string>
 
     <string name="pref_update_dangerous_list_title">Update Dangerous Numbers List</string>
     <string name="pref_update_dangerous_list_summary">Manually refresh the local dangerous numbers database from unknownphone.com. Updated automatically every day at 2 AM.</string>

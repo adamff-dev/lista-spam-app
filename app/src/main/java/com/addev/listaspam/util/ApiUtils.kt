@@ -3,6 +3,7 @@ package com.addev.listaspam.util
 import android.content.Context
 import android.os.Build
 import android.provider.Settings
+import android.util.Log
 import com.addev.listaspam.db.AppDatabase
 import com.addev.listaspam.db.DangerousPhone
 import okhttp3.FormBody
@@ -13,6 +14,7 @@ import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONArray
 import org.json.JSONObject
+import org.jsoup.Jsoup
 import java.util.Locale
 import java.util.UUID
 import java.util.concurrent.TimeUnit
@@ -23,10 +25,12 @@ import javax.xml.parsers.DocumentBuilderFactory
  * Utility object for interacting with the UnknownPhone API to check if a phone number is marked as spam.
  */
 object ApiUtils {
-    private const val UNKNOWN_PHONE_API_URL = "https://secure.unknownphone.com/api2/"
+    private const val TAG = "UnknownPhoneApi"
+    internal const val UNKNOWN_PHONE_API_URL = "https://secure.unknownphone.com/api/v4/"
     private const val UNKNOWN_PHONE_API_KEY_FALLBACK = "d7e07fec659645b12df76c94e378d47a"
     private const val UNKNOWN_PHONE_APP_VERSION = "3.4.3"
     private const val UNKNOWN_PHONE_APP_BUILD = "607"
+    private const val UNKNOWN_PHONE_USER_AGENT = "okhttp/3.14.9"
 
     private const val TELLOWS_API_URL = "www.tellows.de"
     private const val TELLOWS_API_KEY = "koE5hjkOwbHnmcADqZuqqq2"
@@ -46,6 +50,58 @@ object ApiUtils {
 
     private val client = OkHttpClient()
 
+    private data class PhoneDirectory(
+        val searchUrl: (String) -> String,
+        val isSpam: (String) -> Boolean
+    )
+
+    private val phoneDirectories = mapOf(
+        "ES" to PhoneDirectory(
+            searchUrl = { number -> "https://www.listaspam.com/busca.php?Telefono=$number" },
+            isSpam = { html ->
+                Jsoup.parse(html)
+                    .select(".rate-and-owner .phone_rating:not(.result-4):not(.result-5)")
+                    .isNotEmpty()
+            }
+        ),
+        "AU" to PhoneDirectory(
+            searchUrl = { number -> "https://www.unknownphone.com/phone/$number" },
+            isSpam = ::hasUnknownPhoneSpamRating
+        ),
+        "CA" to PhoneDirectory(
+            searchUrl = { number -> "https://www.unknownphone.com/phone/$number" },
+            isSpam = ::hasUnknownPhoneSpamRating
+        ),
+        "GB" to PhoneDirectory(
+            searchUrl = { number -> "https://www.unknownphone.com/phone/$number" },
+            isSpam = ::hasUnknownPhoneSpamRating
+        ),
+        "US" to PhoneDirectory(
+            searchUrl = { number -> "https://www.unknownphone.com/phone/$number" },
+            isSpam = ::hasUnknownPhoneSpamRating
+        )
+    )
+
+    private fun hasUnknownPhoneSpamRating(html: String): Boolean =
+        Regex("Rating:\\s*.*\\b(Bad|Dangerous)\\b", RegexOption.IGNORE_CASE)
+            .containsMatchIn(Jsoup.parse(html).text())
+
+    fun checkListaSpamScraper(number: String, country: String): Boolean {
+        val directory = phoneDirectories[country.uppercase()] ?: return false
+        val request = Request.Builder()
+            .url(directory.searchUrl(number))
+            .header("User-Agent", UNKNOWN_PHONE_USER_AGENT)
+            .build()
+
+        return try {
+            client.newCall(request).execute().use { response ->
+                response.isSuccessful && directory.isSpam(response.body?.string().orEmpty())
+            }
+        } catch (_: Exception) {
+            false
+        }
+    }
+
     private fun getApiKey(context: Context): String {
         fetchAndStoreApiKey(context)
         return getUnknownPhoneApiKey(context) ?: UNKNOWN_PHONE_API_KEY_FALLBACK
@@ -63,7 +119,12 @@ object ApiUtils {
      */
     fun fetchAndStoreApiKey(context: Context) {
         if (getUnknownPhoneApiKey(context) != null) return
-        fetchApiKey(context, Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID))
+        fetchApiKey(
+            context,
+            Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID),
+            null,
+            UNKNOWN_PHONE_USER_AGENT
+        )
         launchOnboardingRequests(context)
     }
 
@@ -201,18 +262,36 @@ object ApiUtils {
         } catch (_: Exception) {}
     }
 
-    fun renewApiKey(context: Context): Boolean {
-        clearUnknownPhoneApiKey(context)
-        val success = fetchApiKey(context, UUID.randomUUID().toString())
-        if (success) {
-            val lang = getListaSpamApiLang(context) ?: Locale.getDefault().country.uppercase()
-            val apiKey = getUnknownPhoneApiKey(context) ?: return success
-            launchOnboardingRequests(context)
-        }
-        return success
+    enum class ApiKeyRenewalResult {
+        SUCCESS,
+        CLOUDFLARE_CHALLENGE,
+        FAILURE
     }
 
-    private fun fetchApiKey(context: Context, userId: String): Boolean {
+    fun newApiKeyUserId(): String = UUID.randomUUID().toString()
+
+    fun renewApiKey(context: Context): Boolean =
+        renewApiKey(context, newApiKeyUserId()) == ApiKeyRenewalResult.SUCCESS
+
+    fun renewApiKey(
+        context: Context,
+        userId: String,
+        cloudflareCookie: String? = null,
+        userAgent: String = UNKNOWN_PHONE_USER_AGENT
+    ): ApiKeyRenewalResult {
+        val result = fetchApiKey(context, userId, cloudflareCookie, userAgent)
+        if (result == ApiKeyRenewalResult.SUCCESS) {
+            launchOnboardingRequests(context)
+        }
+        return result
+    }
+
+    private fun fetchApiKey(
+        context: Context,
+        userId: String,
+        cloudflareCookie: String?,
+        userAgent: String
+    ): ApiKeyRenewalResult {
         val fetchClient = OkHttpClient.Builder()
             .connectTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
@@ -228,20 +307,47 @@ object ApiUtils {
 
         val request = Request.Builder()
             .url(UNKNOWN_PHONE_API_URL)
-            .addHeader("User-Agent", "okhttp/3.14.9")
             .post(body)
+            .header("User-Agent", userAgent)
+            .apply {
+                if (!cloudflareCookie.isNullOrBlank()) {
+                    header("Cookie", cloudflareCookie)
+                }
+            }
             .build()
 
         return try {
             fetchClient.newCall(request).execute().use { response ->
-                if (!response.isSuccessful) return false
-                val json = JSONObject(response.body?.string() ?: return false)
-                val apiKey = json.optString("api_key").takeIf { it.isNotBlank() } ?: return false
+                val responseBody = response.body?.string().orEmpty()
+                val contentType = response.header("Content-Type").orEmpty()
+                val server = response.header("Server").orEmpty()
+                val cfRay = response.header("CF-RAY")
+                val isCloudflareChallenge =
+                    response.code == 403 && (
+                        cfRay != null ||
+                        server.contains("cloudflare", ignoreCase = true) ||
+                        responseBody.contains("error code:", ignoreCase = true) ||
+                        responseBody.contains("cloudflare", ignoreCase = true)
+                    )
+                Log.i(
+                    TAG,
+                    "API key renewal: status=${response.code}, contentType=$contentType, " +
+                        "server=$server, cfRay=$cfRay, cloudflareChallenge=$isCloudflareChallenge, " +
+                        "bodyLength=${responseBody.length}, body=[${responseBody.take(1000)}]"
+                )
+                if (isCloudflareChallenge) {
+                    return ApiKeyRenewalResult.CLOUDFLARE_CHALLENGE
+                }
+                if (!response.isSuccessful) return ApiKeyRenewalResult.FAILURE
+                val json = JSONObject(responseBody)
+                val apiKey = json.optString("api_key").takeIf { it.isNotBlank() }
+                    ?: return ApiKeyRenewalResult.FAILURE
                 setUnknownPhoneApiKey(context, apiKey)
-                true
+                ApiKeyRenewalResult.SUCCESS
             }
-        } catch (_: Exception) {
-            false
+        } catch (exception: Exception) {
+            Log.w(TAG, "API key renewal request failed", exception)
+            ApiKeyRenewalResult.FAILURE
         }
     }
 

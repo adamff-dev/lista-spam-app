@@ -97,10 +97,16 @@
     <string name="pref_filter_lista_spam_api_language_title">Idioma API unknownphone.com</string>
     <string name="pref_filter_lista_spam_api_language_summary">Seleccione el idioma para realizar las búsquedas en la API de unknownphone.com (afecta a los resultados)</string>
 
+    <string name="pref_listaspam_scraper_title">Scraper de directorios web</string>
+    <string name="pref_listaspam_scraper_summary">Consulta el directorio del país seleccionado para detectar llamadas spam</string>
+    <string name="pref_listaspam_scraper_country_title">País del directorio web</string>
+    <string name="pref_listaspam_scraper_country_summary">España usa ListaSpam; el resto de países disponibles usan UnknownPhone</string>
+
     <string name="pref_renew_api_key_title">Renovar clave API</string>
     <string name="pref_renew_api_key_summary">Solicitar una nueva clave API de unknownphone.com. Utilice solo si las solicitudes de API fallan. Abusar de esta opción puede resultar en una prohibición de Unknownphone.</string>
     <string name="pref_renew_api_key_success">Clave API renovada correctamente</string>
     <string name="pref_renew_api_key_failure">No se pudo renovar la clave API</string>
+    <string name="cloudflare_challenge_title">Verificación de seguridad</string>
 
     <!-- API Tellows -->
     <string name="pref_filter_tellows_title">API Tellows</string>

@@ -21,6 +21,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ListaSpam">
         <activity
+            android:name=".CloudflareChallengeActivity"
+            android:exported="false"
+            android:label="@string/cloudflare_challenge_title" />
+        <activity
             android:name=".SettingsActivity"
             android:exported="false" />
         <activity
