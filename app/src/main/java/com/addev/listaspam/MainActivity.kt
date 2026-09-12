@@ -63,6 +63,7 @@ class MainActivity : AppCompatActivity(), CallLogAdapter.OnItemChangedListener {
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView?.layoutManager = LinearLayoutManager(this)
 
+        CountryLanguageUtils.setListaSpamScraperCountry(this)
         CountryLanguageUtils.setTellowsCountry(this)
         CountryLanguageUtils.setTruecallerCountry(this)
         if (isUpdateCheckEnabled(this)) {

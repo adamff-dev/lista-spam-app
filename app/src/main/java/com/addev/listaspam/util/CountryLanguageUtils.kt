@@ -34,6 +34,22 @@ object CountryLanguageUtils {
         setTellowsApiCountry(context, finalCountry)
     }
 
+    fun setListaSpamScraperCountry(context: Context) {
+        if (hasListaSpamScraperCountry(context)) return
+
+        val simCountry = getSimCountry(context).uppercase()
+        val systemCountry = Locale.getDefault().country.uppercase()
+        val supportedCountries =
+            context.resources.getStringArray(R.array.listaspam_scraper_country_values).toSet()
+
+        val finalCountry = when {
+            supportedCountries.contains(simCountry) -> simCountry
+            supportedCountries.contains(systemCountry) -> systemCountry
+            else -> "OTHER"
+        }
+        setListaSpamScraperCountry(context, finalCountry)
+    }
+
     fun setTruecallerCountry(context: Context) {
         if (getTruecallerApiCountry(context) != null) return
 
