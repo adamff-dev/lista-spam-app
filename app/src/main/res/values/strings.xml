@@ -35,7 +35,7 @@
 
     <!-- Preferences Sections -->
     <string name="pref_category_general_blocking">General</string>
-    <string name="pref_category_unknown_phone_api">UnknownPhone scraper</string>
+    <string name="pref_category_unknown_phone_api">UnknownPhone scraper 🌐</string>
     <string name="pref_category_tellows_api">Tellows API 🌐</string>
     <string name="pref_category_truecaller_api">Truecaller API 🌐</string>
     <string name="pref_category_spam_filters">Spam Number Filters</string>
@@ -89,7 +89,7 @@
     <string name="pref_enable_blocking_title">Enable Blocking</string>
     <string name="pref_enable_blocking_summary">Enable or disable call blocking functionality</string>
 
-    <string name="pref_listaspam_scraper_title">Enable UnknownPhone scraper</string>
+    <string name="pref_listaspam_scraper_title">(Recommended) Enable UnknownPhone scraper</string>
     <string name="pref_listaspam_scraper_summary">Check the selected regional directory for reported spam calls</string>
     <string name="pref_listaspam_scraper_country_title">UnknownPhone lookup country</string>
     <string name="pref_listaspam_scraper_country_summary">Uses the selected regional directory; other countries use the international UnknownPhone search</string>
@@ -125,7 +125,7 @@
     <string name="pref_mute_instead_of_block_summary">Mute incoming spam calls instead of blocking them completely</string>
 
     <string name="pref_answer_and_hangup_title">Answer and Hang Up</string>
-    <string name="pref_answer_and_hangup_summary">Automatically answer and immediately disconnect spam calls</string>
+    <string name="pref_answer_and_hangup_summary">Silences a spam call, then immediately answers and hangs up. This prevents callers from leaving voicemails and provides a &quot;busy tone&quot; rejection.</string>
 
     <!-- Notifications -->
     <string name="pref_show_notification_title">Show Notification on Block</string>

@@ -22,7 +22,7 @@
         app:iconSpaceReserved="false">
 
         <CheckBoxPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="pref_listaspam_scraper"
             android:summary="@string/pref_listaspam_scraper_summary"
             android:title="@string/pref_listaspam_scraper_title"

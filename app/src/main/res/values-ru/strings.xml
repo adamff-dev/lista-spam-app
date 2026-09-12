@@ -35,7 +35,7 @@
 
     <!-- Preferences Sections -->
     <string name="pref_category_general_blocking">Общие</string>
-    <string name="pref_category_unknown_phone_api">UnknownPhone scraper</string>
+    <string name="pref_category_unknown_phone_api">UnknownPhone scraper 🌐</string>
     <string name="pref_category_tellows_api">API Tellows 🌐</string>
     <string name="pref_category_truecaller_api">API Truecaller 🌐</string>
     <string name="pref_category_spam_filters">Фильтры спам-номеров</string>
@@ -75,6 +75,8 @@
     <!-- General Blocking Settings -->
     <string name="pref_enable_blocking_title">Включить блокировку</string>
     <string name="pref_enable_blocking_summary">Включить или выключить функцию блокировки звонков</string>
+    <string name="pref_listaspam_scraper_title">(Рекомендуется) Включить scraper UnknownPhone</string>
+    <string name="pref_listaspam_scraper_summary">Проверяет выбранный региональный каталог на наличие сообщений о спам-звонках</string>
 
     <!-- API Tellows -->
     <string name="pref_filter_tellows_title">API Tellows</string>
@@ -105,6 +107,8 @@
 
     <string name="pref_mute_instead_of_block_title">Беззвучно вместо блокировки</string>
     <string name="pref_mute_instead_of_block_summary">Беззвучно принимать спам-звонки вместо полной блокировки</string>
+    <string name="pref_answer_and_hangup_title">Ответить и завершить вызов</string>
+    <string name="pref_answer_and_hangup_summary">Отключает звук спам-звонка, затем сразу отвечает на него и завершает вызов. Это не позволяет звонящему оставить голосовое сообщение и отклоняет вызов с сигналом «занято».</string>
 
     <!-- Notifications -->
     <string name="pref_show_notification_title">Показывать уведомление при блокировке</string>

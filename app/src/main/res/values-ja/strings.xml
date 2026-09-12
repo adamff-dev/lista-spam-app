@@ -33,7 +33,7 @@
     <string name="donate">寄付</string>
     <!-- Preferences Sections -->
     <string name="pref_category_general_blocking">一般</string>
-    <string name="pref_category_unknown_phone_api">UnknownPhone scraper</string>
+    <string name="pref_category_unknown_phone_api">UnknownPhone scraper 🌐</string>
     <string name="pref_category_tellows_api">Tellows API 🌐</string>
     <string name="pref_category_truecaller_api">Truecaller API 🌐</string>
     <string name="pref_category_spam_filters">スパム電話番号のフィルタ</string>
@@ -61,6 +61,8 @@
     <!-- General Blocking Settings -->
     <string name="pref_enable_blocking_title">ブロックを有効化</string>
     <string name="pref_enable_blocking_summary">通話のブロック機能を有効化または無効化します</string>
+    <string name="pref_listaspam_scraper_title">(推奨) UnknownPhone scraper を有効化</string>
+    <string name="pref_listaspam_scraper_summary">選択した地域のディレクトリで報告されたスパム着信を確認します</string>
     <!-- Blocked and Whitelisted Numbers -->
     <string name="pref_blocked_numbers_list_title">ブロック済み電話番号</string>
     <string name="pref_blocked_numbers_list_summary">ブロックする電話番号を入力 (一行ごと)</string>
@@ -92,6 +94,8 @@
     <string name="pref_block_stir_shaken_risk_summary">STIR/SHAKEN システムによって不正の可能性があるとマークされた着信をブロックします (Android 11 以降のみ対応、一部の国とキャリアで利用可能)</string>
     <string name="pref_mute_instead_of_block_title">ブロックの代わりにミュートにする</string>
     <string name="pref_mute_instead_of_block_summary">スパムからの着信を完全にブロックせずにミュートにします</string>
+    <string name="pref_answer_and_hangup_title">応答して切断</string>
+    <string name="pref_answer_and_hangup_summary">スパム着信を消音し、直ちに応答して切断します。発信者が留守番電話にメッセージを残すのを防ぎ、「話中音」で着信を拒否します。</string>
     <!-- Notifications -->
     <string name="pref_show_notification_title">ブロック時に通知を表示する</string>
     <string name="pref_show_notification_summary">着信がブロックされたときに通知を表示します</string>

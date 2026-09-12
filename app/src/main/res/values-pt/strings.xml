@@ -35,7 +35,7 @@
 
     <!-- Preferences Sections -->
     <string name="pref_category_general_blocking">Geral</string>
-    <string name="pref_category_unknown_phone_api">Scraper UnknownPhone</string>
+    <string name="pref_category_unknown_phone_api">Scraper UnknownPhone 🌐</string>
     <string name="pref_category_tellows_api">API Tellows 🌐</string>
     <string name="pref_category_truecaller_api">API Truecaller 🌐</string>
     <string name="pref_category_spam_filters">Filtros de Números Spam</string>
@@ -64,6 +64,8 @@
     <!-- General Blocking Settings -->
     <string name="pref_enable_blocking_title">Ativar Bloqueio</string>
     <string name="pref_enable_blocking_summary">Ativar ou desativar a funcionalidade de bloqueio de chamadas</string>
+    <string name="pref_listaspam_scraper_title">(Recomendado) Ativar scraper UnknownPhone</string>
+    <string name="pref_listaspam_scraper_summary">Verifica o diretório regional selecionado para encontrar chamadas de spam denunciadas</string>
 
     <!-- Blocked and Whitelisted Numbers -->
     <string name="pref_blocked_numbers_list_title">Números Bloqueados</string>
@@ -99,6 +101,8 @@
     <string name="pref_block_stir_shaken_risk_summary">Bloquear chamadas marcadas como potencialmente fraudulentas pelo sistema STIR/SHAKEN (apenas Android 11+, disponível em alguns países e operadoras)</string>
     <string name="pref_mute_instead_of_block_title">Silenciar em Vez de Bloquear</string>
     <string name="pref_mute_instead_of_block_summary">Silenciar chamadas spam recebidas em vez de bloqueá-las completamente</string>
+    <string name="pref_answer_and_hangup_title">Atender e desligar</string>
+    <string name="pref_answer_and_hangup_summary">Silencia uma chamada de spam, atende-a imediatamente e desliga. Isso impede que os chamadores deixem mensagens de voz e rejeita a chamada com um &quot;tom de ocupado&quot;.</string>
 
     <!-- Notifications -->
     <string name="pref_show_notification_title">Mostrar Notificação ao Bloquear</string>

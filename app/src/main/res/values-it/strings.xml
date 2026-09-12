@@ -35,7 +35,7 @@
 
     <!-- Preferences Sections -->
     <string name="pref_category_general_blocking">Generale</string>
-    <string name="pref_category_unknown_phone_api">UnknownPhone scraper</string>
+    <string name="pref_category_unknown_phone_api">UnknownPhone scraper 🌐</string>
     <string name="pref_category_tellows_api">Tellows API 🌐</string>
     <string name="pref_category_truecaller_api">Truecaller API 🌐</string>
     <string name="pref_category_spam_filters">Filtri per i numeri di spam</string>
@@ -64,6 +64,9 @@
     <!-- General Blocking Settings -->
     <string name="pref_enable_blocking_title">Abilita blocco</string>
     <string name="pref_enable_blocking_summary">Abilita o disabilita la funzionalità di blocco delle chiamate</string>
+
+    <string name="pref_listaspam_scraper_title">(Consigliato) Abilita lo scraper UnknownPhone</string>
+    <string name="pref_listaspam_scraper_summary">Controlla la directory regionale selezionata per individuare chiamate spam segnalate</string>
 
     <!-- Blocked and Whitelisted Numbers -->
     <string name="pref_blocked_numbers_list_title">Numeri Bloccati</string>
@@ -105,6 +108,8 @@
 
     <string name="pref_mute_instead_of_block_title">Silenzia Invece di Bloccare</string>
     <string name="pref_mute_instead_of_block_summary">Silenzia le chiamate spam in arrivo invece di bloccarle completamente</string>
+    <string name="pref_answer_and_hangup_title">Rispondi e riaggancia</string>
+    <string name="pref_answer_and_hangup_summary">Silenzia una chiamata spam, quindi risponde immediatamente e riaggancia. In questo modo si impedisce ai chiamanti di lasciare messaggi vocali e si rifiuta la chiamata con un tono di occupato.</string>
 
     <!-- Notifications -->
     <string name="pref_show_notification_title">Mostra Notifica su Blocco</string>
