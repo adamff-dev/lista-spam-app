@@ -100,7 +100,7 @@
     <string name="pref_listaspam_scraper_title">Scraper de directorios web</string>
     <string name="pref_listaspam_scraper_summary">Consulta el directorio del país seleccionado para detectar llamadas spam</string>
     <string name="pref_listaspam_scraper_country_title">País del directorio web</string>
-    <string name="pref_listaspam_scraper_country_summary">España usa ListaSpam; el resto de países disponibles usan UnknownPhone</string>
+    <string name="pref_listaspam_scraper_country_summary">Usa el directorio regional seleccionado; el resto de países usa la búsqueda internacional de UnknownPhone</string>
 
     <string name="pref_renew_api_key_title">Renovar clave API</string>
     <string name="pref_renew_api_key_summary">Solicitar una nueva clave API de unknownphone.com. Utilice solo si las solicitudes de API fallan. Abusar de esta opción puede resultar en una prohibición de Unknownphone.</string>

@@ -56,35 +56,79 @@ object ApiUtils {
     )
 
     private val phoneDirectories = mapOf(
-        "ES" to PhoneDirectory(
-            searchUrl = { number -> "https://www.listaspam.com/busca.php?Telefono=$number" },
-            isSpam = { html ->
-                Jsoup.parse(html)
-                    .select(".rate-and-owner .phone_rating:not(.result-4):not(.result-5)")
-                    .isNotEmpty()
-            }
+        "ES" to listaSpamDirectory("www.listaspam.com"),
+        "MX" to listaSpamDirectory("mx.listaspam.com"),
+        "AR" to listaSpamDirectory("ar.listaspam.com"),
+        "CO" to listaSpamDirectory("co.listaspam.com"),
+        "CL" to listaSpamDirectory("cl.listaspam.com"),
+        "PE" to listaSpamDirectory("pe.listaspam.com"),
+        "VE" to listaSpamDirectory("ve.listaspam.com"),
+        "EC" to listaSpamDirectory("ec.listaspam.com"),
+        "UY" to listaSpamDirectory("uy.listaspam.com"),
+        "FR" to localizedDirectory("www.telefono-numero.fr", ::hasFrenchSpamRating),
+        "IT" to localizedDirectory("www.chi-chiama.it", ::hasItalianSpamRating),
+        "DE" to PhoneDirectory(
+            searchUrl = { number -> "https://www.anrufer-bewertung.de/${number.replace("+", "%2B")}" },
+            isSpam = ::hasGermanSpamRating
         ),
-        "AU" to PhoneDirectory(
-            searchUrl = { number -> "https://www.unknownphone.com/phone/$number" },
-            isSpam = ::hasUnknownPhoneSpamRating
-        ),
-        "CA" to PhoneDirectory(
-            searchUrl = { number -> "https://www.unknownphone.com/phone/$number" },
-            isSpam = ::hasUnknownPhoneSpamRating
-        ),
-        "GB" to PhoneDirectory(
-            searchUrl = { number -> "https://www.unknownphone.com/phone/$number" },
-            isSpam = ::hasUnknownPhoneSpamRating
-        ),
-        "US" to PhoneDirectory(
-            searchUrl = { number -> "https://www.unknownphone.com/phone/$number" },
-            isSpam = ::hasUnknownPhoneSpamRating
-        )
+        "PT" to localizedDirectory("www.quemmelineu.com", ::hasPortugueseSpamRating),
+        "AU" to unknownPhoneDirectory(),
+        "CA" to unknownPhoneDirectory(),
+        "GB" to unknownPhoneDirectory(),
+        "US" to unknownPhoneDirectory(),
+        "OTHER" to unknownPhoneDirectory()
     )
+
+    private fun listaSpamDirectory(host: String) = PhoneDirectory(
+        searchUrl = { number -> phoneSearchUrl(host, "busca.php", "Telefono", number) },
+        isSpam = ::hasListaSpamSpamRating
+    )
+
+    private fun localizedDirectory(host: String, isSpam: (String) -> Boolean) = PhoneDirectory(
+        searchUrl = { number -> phoneSearchUrl(host, "search.php", "num", number) },
+        isSpam = isSpam
+    )
+
+    private fun unknownPhoneDirectory() = PhoneDirectory(
+        searchUrl = { number -> phoneSearchUrl("www.unknownphone.com", "search.php", "num", number) },
+        isSpam = ::hasUnknownPhoneSpamRating
+    )
+
+    private fun phoneSearchUrl(host: String, path: String, parameter: String, number: String): String =
+        HttpUrl.Builder()
+            .scheme("https")
+            .host(host)
+            .addPathSegment(path)
+            .addQueryParameter(parameter, number)
+            .build()
+            .toString()
+
+    private fun hasListaSpamSpamRating(html: String): Boolean =
+        Jsoup.parse(html)
+            .select(".rate-and-owner .phone_rating:not(.result-4):not(.result-5)")
+            .isNotEmpty()
 
     private fun hasUnknownPhoneSpamRating(html: String): Boolean =
         Regex("Rating:\\s*.*\\b(Bad|Dangerous)\\b", RegexOption.IGNORE_CASE)
             .containsMatchIn(Jsoup.parse(html).text())
+
+    private fun hasFrenchSpamRating(html: String): Boolean =
+        hasNegativeRating(html, "Mauvais", "Dangereux", "Arnaque", "Indesirable")
+
+    private fun hasItalianSpamRating(html: String): Boolean =
+        hasNegativeRating(html, "Cattivo", "Pericoloso", "Truffa", "Indesiderato")
+
+    private fun hasPortugueseSpamRating(html: String): Boolean =
+        hasNegativeRating(html, "Mau", "Perigoso", "Fraude", "Indesejado")
+
+    private fun hasGermanSpamRating(html: String): Boolean =
+        hasNegativeRating(html, "Unseriose Nummer", "Belastigung", "Spam")
+
+    private fun hasNegativeRating(html: String, vararg negativeRatings: String): Boolean =
+        Regex(
+            "(?:Rating|Bewertung|Valutazione|Classificazione|Avaliacao)\\s*:\\s*.*\\b(${negativeRatings.joinToString("|")})\\b",
+            RegexOption.IGNORE_CASE
+        ).containsMatchIn(Jsoup.parse(html).text())
 
     fun checkListaSpamScraper(number: String, country: String): Boolean {
         val directory = phoneDirectories[country.uppercase()] ?: return false
