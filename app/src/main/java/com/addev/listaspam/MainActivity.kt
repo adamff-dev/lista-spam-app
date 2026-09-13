@@ -37,6 +37,9 @@ import com.addev.listaspam.util.isUpdateCheckEnabled
 import java.util.Locale
 import androidx.core.net.toUri
 import com.addev.listaspam.util.CountryLanguageUtils
+import android.provider.CallLog
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 
 class MainActivity : AppCompatActivity(), CallLogAdapter.OnItemChangedListener {
 
@@ -62,6 +65,11 @@ class MainActivity : AppCompatActivity(), CallLogAdapter.OnItemChangedListener {
 
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView?.layoutManager = LinearLayoutManager(this)
+
+        val filterChipGroup = findViewById<ChipGroup>(R.id.filterChipGroup)
+        filterChipGroup.setOnCheckedStateChangeListener { _, _ ->
+            refreshCallLogs()
+        }
 
         CountryLanguageUtils.setListaSpamScraperCountry(this)
         CountryLanguageUtils.setTellowsCountry(this)
@@ -176,7 +184,29 @@ class MainActivity : AppCompatActivity(), CallLogAdapter.OnItemChangedListener {
         val blockedNumbers = getBlockedNumbers(this)
         val whitelistNumbers = getWhitelistNumbers(this)
 
-        val callLogs = getCallLogs(this)
+        var callLogs = getCallLogs(this)
+
+        val chipIncoming = findViewById<Chip>(R.id.chipIncoming)
+        val chipBlocked = findViewById<Chip>(R.id.chipBlocked)
+        val chipMissed = findViewById<Chip>(R.id.chipMissed)
+        val chipOutgoing = findViewById<Chip>(R.id.chipOutgoing)
+
+        val incomingChecked = chipIncoming.isChecked
+        val blockedChecked = chipBlocked.isChecked
+        val missedChecked = chipMissed.isChecked
+        val outgoingChecked = chipOutgoing.isChecked
+
+        if (incomingChecked || blockedChecked || missedChecked || outgoingChecked) {
+            callLogs = callLogs.filter { log ->
+                when (log.type) {
+                    CallLog.Calls.INCOMING_TYPE -> incomingChecked
+                    CallLog.Calls.BLOCKED_TYPE, CallLog.Calls.REJECTED_TYPE -> blockedChecked
+                    CallLog.Calls.MISSED_TYPE -> missedChecked
+                    CallLog.Calls.OUTGOING_TYPE -> outgoingChecked
+                    else -> false
+                }
+            }
+        }
 
         if (callLogAdapter == null) {
             callLogAdapter = CallLogAdapter(this, callLogs, blockedNumbers, whitelistNumbers)

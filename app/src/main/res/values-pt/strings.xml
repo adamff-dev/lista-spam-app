@@ -23,6 +23,7 @@
 
     <!-- Call types -->
     <string name="call_incoming">Chamada recebida</string>
+    <string name="call_outgoing">Chamada efetuada</string>
     <string name="call_missed">Chamada perdida</string>
     <string name="call_rejected">Chamada rejeitada</string>
     <string name="call_blocked">Chamada bloqueada</string>

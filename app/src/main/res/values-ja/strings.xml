@@ -23,6 +23,7 @@
     <string name="number_copied_to_clipboard">電話番号をクリップボードにコピーしました</string>
     <!-- Call types -->
     <string name="call_incoming">着信</string>
+    <string name="call_outgoing">発信</string>
     <string name="call_missed">不在着信</string>
     <string name="call_rejected">通話拒否</string>
     <string name="call_blocked">着信をブロック済み</string>

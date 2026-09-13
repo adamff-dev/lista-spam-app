@@ -1,9 +1,12 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.ListaSpam" parent="Theme.AppCompat.Light">
+    <style name="Base.Theme.ListaSpam" parent="Theme.MaterialComponents.DayNight">
         <!-- Customize your light theme here. -->
         <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryVariant">@color/white</item>
+        <item name="colorOnPrimary">@color/black</item>
         <item name="colorSecondary">@color/black</item>
+        <item name="colorOnSecondary">@color/white</item>
     </style>
 
     <style name="Theme.ListaSpam" parent="Base.Theme.ListaSpam" />

@@ -6,7 +6,10 @@ plugins {
 }
 
 val localProperties = Properties().apply {
-    rootProject.file("local.properties").inputStream().use { input -> load(input) }
+    val file = rootProject.file("local.properties")
+    if (file.exists()) {
+        file.inputStream().use { input -> load(input) }
+    }
 }
 
 android {
@@ -25,17 +28,23 @@ android {
     }
 
     signingConfigs {
-        create("release") {
-            storeFile = file(localProperties.getProperty("releaseStoreFile"))
-            storePassword = localProperties.getProperty("releaseStorePassword")
-            keyAlias = localProperties.getProperty("releaseKeyAlias")
-            keyPassword = localProperties.getProperty("releaseKeyPassword")
+        val storeFile = localProperties.getProperty("releaseStoreFile")
+        if (storeFile != null) {
+            create("release") {
+                this.storeFile = file(storeFile)
+                storePassword = localProperties.getProperty("releaseStorePassword")
+                keyAlias = localProperties.getProperty("releaseKeyAlias")
+                keyPassword = localProperties.getProperty("releaseKeyPassword")
+            }
         }
     }
 
     buildTypes {
         release {
-            signingConfig = signingConfigs.getByName("release")
+            val releaseSigning = signingConfigs.findByName("release")
+            if (releaseSigning != null) {
+                signingConfig = releaseSigning
+            }
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
