@@ -110,6 +110,7 @@ class CallLogAdapter(
 
             val action = when (callLog.type) {
                 CallLog.Calls.INCOMING_TYPE -> context.getString(R.string.call_incoming)
+                CallLog.Calls.OUTGOING_TYPE -> context.getString(R.string.call_outgoing)
                 CallLog.Calls.MISSED_TYPE -> context.getString(R.string.call_missed)
                 CallLog.Calls.REJECTED_TYPE -> context.getString(R.string.call_rejected)
                 CallLog.Calls.BLOCKED_TYPE -> context.getString(R.string.call_blocked)

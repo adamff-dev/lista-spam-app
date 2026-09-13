@@ -23,6 +23,7 @@
 
     <!-- Call types -->
     <string name="call_incoming">Входящий звонок</string>
+    <string name="call_outgoing">Исходящий звонок</string>
     <string name="call_missed">Пропущенный звонок</string>
     <string name="call_rejected">Отклонённый звонок</string>
     <string name="call_blocked">Заблокированный звонок</string>

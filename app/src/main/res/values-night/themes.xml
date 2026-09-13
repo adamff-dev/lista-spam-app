@@ -1,9 +1,12 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.ListaSpam" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Base.Theme.ListaSpam" parent="Theme.MaterialComponents.DayNight">
         <!-- Customize your dark theme here. -->
-        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimary">@color/black</item>
+        <item name="colorPrimaryVariant">@color/black</item>
+        <item name="colorOnPrimary">@color/white</item>
         <item name="colorSecondary">@color/white</item>
+        <item name="colorOnSecondary">@color/black</item>
         <item name="android:windowBackground">@color/darkBackground</item>
     </style>
     <style name="PopupMenuStyle" parent="@style/Widget.AppCompat.PopupMenu">

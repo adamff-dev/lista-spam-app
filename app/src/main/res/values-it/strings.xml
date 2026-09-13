@@ -23,6 +23,7 @@
 
     <!-- Call types -->
     <string name="call_incoming">Chiamata in arrivo</string>
+    <string name="call_outgoing">Chiamata in uscita</string>
     <string name="call_missed">Chiamata persa</string>
     <string name="call_rejected">Chiamata rifiutata</string>
     <string name="call_blocked">Chiamata bloccata</string>
